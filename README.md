@@ -1,32 +1,20 @@
-
 # flutter_ntp
 
-[![pub package](https://img.shields.io/pub/v/flutter_ntp.svg)](https://pub.dartlang.org/packages/flutter_ntp)
+[![pub package](https://img.shields.io/pub/v/flutter_ntp.svg)](https://pub.dev/packages/flutter_ntp)
 
-A Flutter package for obtaining accurate time using Network Time Protocol (NTP).
+A small, fast **NTP (Network Time Protocol) client** for Flutter and Dart.
 
-## Overview
+- Pure Dart, no platform channels — works on Android, iOS, macOS, Windows, Linux.
+- Sync once, read forever: the offset between device and server is cached, so subsequent calls are instant.
+- 40+ public NTP servers built in, or pass any host name.
+- Typed `NtpException`, configurable timeout, optional fallback to device clock.
 
-`flutter_ntp` is a Dart package designed to fetch accurate time information using NTP servers. It supports querying various NTP servers and caching responses to improve performance and reliability.
-
-## Features
-
-- **NTP Querying**: Fetch accurate time from NTP servers.
-- **Server Flexibility**: Supports querying from a wide range of NTP servers.
-- **Caching**: Optionally caches NTP responses to reduce network calls and improve performance.
-- **Timeout Handling**: Configurable timeout for NTP queries.
-- **Easy Integration**: Simple API for fetching NTP time in your Flutter applications.
-
-## Installation
-
-Add `flutter_ntp` to your `pubspec.yaml` file:
+## Install
 
 ```yaml
 dependencies:
-  flutter_ntp: ^version
+  flutter_ntp: ^0.1.0
 ```
-
-Install packages from the command line:
 
 ```bash
 flutter pub get
@@ -34,39 +22,84 @@ flutter pub get
 
 ## Usage
 
-Import the package where needed:
-
 ```dart
 import 'package:flutter_ntp/flutter_ntp.dart';
 ```
 
-### Fetching NTP Time
+### Quick start
 
 ```dart
- DateTime currentTime = await FlutterNTP.now();
- print('Current NTP time: $currentTime');
+// One time, somewhere early in your app:
+await FlutterNTP.sync();
+
+// Anywhere else — instant, no network:
+final accurateNow = FlutterNTP.nowSync();
+print('NTP time : $accurateNow');
+print('Offset   : ${FlutterNTP.offset}');
 ```
 
-### Parameters
-
-- `lookUpAddress`: Optional. The NTP server address to query. Default is `google`, you can access `NtpServer` and change the address.
-- `port`: Optional. The port number for NTP query. Default is `123`, which uses default port for `google` server.
-- `timeout`: Optional. Timeout duration for NTP query. Default is `null`.
-- `cacheDuration`: Optional. Duration to cache NTP responses. Default is 1 hour.
-
-### Example
+### One-shot
 
 ```dart
-DateTime currentTime = await NTP.now(
-  lookUpAddress: NtpServer.google.url,
-  port: 123,
-  timeout: Duration(seconds: 5),
-  cacheDuration: Duration(minutes: 30),
+final ntpNow = await FlutterNTP.now();         // re-uses the cache when fresh
+final ntpNow = await FlutterNTP.now(forceRefresh: true); // always re-sync
+```
+
+### Pick a server / set a timeout
+
+```dart
+await FlutterNTP.sync(
+  server: NtpServer.cloudflare,
+  timeout: const Duration(seconds: 3),
 );
+
+// Or a custom host:
+await FlutterNTP.sync(lookUpAddress: 'my-internal-ntp.example.com');
 ```
+
+### Error handling
+
+`FlutterNTP.now()` falls back to `DateTime.now()` by default if the network call fails — useful in offline scenarios. Pass `allowFallback: false` to make failures explicit:
+
+```dart
+try {
+  final t = await FlutterNTP.now(allowFallback: false);
+} on NtpException catch (e) {
+  // handle network / DNS / timeout
+}
+```
+
+### Inspect / reset the cache
+
+```dart
+FlutterNTP.offset;          // Duration? — last known server-device offset
+FlutterNTP.lastSyncAt;      // DateTime? — when sync last succeeded
+FlutterNTP.lastSyncServer;  // String?   — host name of last sync
+FlutterNTP.clearCache();    // forget everything
+```
+
+### Available servers
+
+```text
+google · cloudflare · facebook · microsoft · apple · nist · pool · usno · isc
+timeNl · chrony · hetzner · hetzner2 · ntpSe · qix · mskIx · ripe · ispClockIsc
+natMorris · eduUtcnist · ntpstm · netGps · ptb · plNtp · fuBerlin · surfnet
+asynchronos · czNtp · roNtp · lysator · caTime · mxCronos · esHora · itInrim
+beOma · huAtomki · eusI2t · chNeel · cnNeu · jpNict · brUfrj · clShoa · intEsa
+```
+
+## Platform support
+
+| Platform           | Supported |
+|--------------------|:---------:|
+| Android / iOS      | ✅        |
+| macOS / Windows / Linux | ✅   |
+| Web                | ❌ (no UDP) |
+
+`FlutterNTP.isSupported` is `false` on the web.
 
 ## Support
 
-If you find this plugin helpful, consider supporting me:
+If you find this package useful, consider supporting the author:
 
 [![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg)](https://buymeacoffee.com/is10vmust)

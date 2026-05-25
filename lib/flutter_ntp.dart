@@ -1,7 +1,3 @@
-library flutter_ntp;
+library;
 
-import 'dart:developer' as dev;
-import 'dart:io';
-import 'dart:math';
-
-part 'src/ntp.dart';
+export 'src/flutter_ntp.dart';

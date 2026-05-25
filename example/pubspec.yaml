@@ -1,26 +1,23 @@
-name: example
-description: "A new Flutter project."
-
+name: flutter_ntp_example
+description: "Demonstrates how to use the flutter_ntp package."
 publish_to: "none"
-
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.4.3 <4.0.0"
+  sdk: ^3.4.0
+  flutter: ">=3.22.0"
 
 dependencies:
   flutter:
     sdk: flutter
-
-  cupertino_icons: ^1.0.6
-
   flutter_ntp:
     path: ../
+  cupertino_icons: ^1.0.8
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  flutter_lints: ^3.0.0
+  flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: true

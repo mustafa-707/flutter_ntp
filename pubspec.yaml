@@ -1,18 +1,19 @@
 name: flutter_ntp
-description: "A flutter implementation of (NTP) Network Time Protocol server."
-version: 0.0.2
+description: A small, fast NTP (Network Time Protocol) client for Flutter and Dart with built-in offset caching.
+version: 0.1.0
+homepage: https://github.com/mustafa-707/flutter_ntp
 repository: https://github.com/mustafa-707/flutter_ntp
 issue_tracker: https://github.com/mustafa-707/flutter_ntp/issues
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.3.0"
+  sdk: ^3.4.0
+  flutter: ">=3.22.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
 dev_dependencies:
-  flutter_lints: ^4.0.0
-
-flutter:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
