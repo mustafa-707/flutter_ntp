@@ -1,5 +1,6 @@
 # flutter_ntp
 
+[![StandWithPalestine](https://raw.githubusercontent.com/TheBSD/StandWithPalestine/main/badges/StandWithPalestine.svg)](https://github.com/TheBSD/StandWithPalestine/blob/main/docs/README.md)
 [![pub package](https://img.shields.io/pub/v/flutter_ntp.svg)](https://pub.dev/packages/flutter_ntp)
 
 A small, fast **NTP (Network Time Protocol) client** for Flutter and Dart.
